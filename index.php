@@ -116,7 +116,9 @@
                         <p>
                             You can download Grayscale for free on the preview page at Start Bootstrap.
                         </p>
-                        <a href="http://startbootstrap.com/template-overviews/grayscale/" class="btn btn-default btn-lg">Visit Download Page</a>
+                        
+                        <a href="intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;end"> Take a QR code </a>
+                        <a href="#" class="btn btn-default btn-lg">Download</a>
                     </div>
                 </div>
             </div>
@@ -170,13 +172,12 @@
         <!-- Plugin JavaScript -->
         <script src="js/jquery.easing.min.js"></script>
 
-        <!-- Google Maps API Key - Use your own API key to enable the map feature. More information on the Google Maps API can be found at https://developers.google.com/maps/ -->
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRngKslUGJTlibkQ3FkfTxj3Xss1UlZDA&sensor=false"></script>
+      
 
         <!-- Custom Theme JavaScript -->
         <script src="js/grayscale.js"></script>
-        
-        <script src="js/android_custom_url.js"></script>
+        <script src="js/mobile_detection.js"></script>
+        <script src="js/android_custom_url.js?v=<?php echo rand() ?>"></script>
 
     </body>
 

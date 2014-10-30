@@ -1,14 +1,15 @@
 /*jslint vars: true , nomen: true devel: true, plusplus: true*/
-/*global $, jQuery*/
+/*global $, jQuery, BestPint*/
 ( function() {"use strict";
         var custom = "epicollect5://view?project=bestpint";
-        var alt = "https://play.google.com/store/apps/details?id=uk.ac.imperial.epi_collect2&hl=en_GB";
-        var g_intent = "intent:#Intent;action=uk.ac.epicollect5.REQUEST_PROJECT;S.project=123456;end";
+        var alt = "https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5&hl=en_GB";
         
+        //var alt = "market://details?id=uk.ac.imperial.epicollect5";
         
+        var g_intent = "intent:#Intent;action=uk.ac.imperial.epicollect5.REQUEST_PROJECT;S.project=bestpint;package=uk.ac.imperial.epicollect5;end";
+
         //uk.ac.epicollect5.REQUEST_PROJECT
-        
-        
+
         var timer;
         var heartbeat;
         var iframe_timer;
@@ -64,7 +65,13 @@
 
 
         $(".source_url").click(function(event) {
-            launch_app_or_alt_url($(this));
+
+          //  if (BestPint.isMobile.Android()) {
+
+                console.log("Android browser detected **********************");
+                launch_app_or_alt_url($(this));
+          //  }
+
             event.preventDefault();
         });
 
