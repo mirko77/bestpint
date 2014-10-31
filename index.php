@@ -79,7 +79,7 @@
                             <p class="intro-text">
                                 We love beer, and we think you do too
                                 <br>
-                                Created for thirst by the CPGS team using <a href="http://plus.epicollect.net/">Epicollect+</a>
+                                Created for thirst by the CGPS team using <a href="http://plus.epicollect.net/">Epicollect+</a>
                             </p>
                             <a href="#about" class="btn btn-circle page-scroll"> <i class="fa fa-angle-double-down animated"></i> </a>
                         </div>
