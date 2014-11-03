@@ -5,8 +5,6 @@
         var alt = "https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5&hl=en_GB";
         var g_intent = "intent:#Intent;action=uk.ac.imperial.epicollect5.REQUEST_PROJECT;S.project=bestpint;package=uk.ac.imperial.epicollect5;end";
 
-        //uk.ac.epicollect5.REQUEST_PROJECT
-
         var timer;
         var heartbeat;
         var iframe_timer;
@@ -22,6 +20,7 @@
         function intervalHeartbeat() {
             if (document.webkitHidden || document.hidden) {
                 clearTimers();
+                document.location = "http://bestpint.net";
             }
         }
 
@@ -41,7 +40,7 @@
         /*
          * Some webkit browsers can handle the scheme, showing an error.
          * the timeout will load the Play Store page (I tested this on Firefox only,
-         * which displyes a toast warning)
+         * which displayes a toast warning)
          */
         function tryWebkitApproach() {
             document.location = custom;
@@ -57,21 +56,17 @@
          */
         function useIntent() {
             document.location = g_intent;
-
-            //for Chrome < 25 and Opera
-            setTimeout(function() {
-                tryWebkitApproach();
-            }, 1000);
         }
 
         function launch_app_or_alt_url(el) {
-           
 
-            //continue to check if the page s still on the foreground
+            //continue to check if the page is still on the foreground
             heartbeat = setInterval(intervalHeartbeat, 200);
 
             //use Chrome intent (on Chrome > 25 it works)
             if (navigator.userAgent.match(/Chrome/)) {
+
+                alert(navigator.userAgent);
 
                 //is Opera? The new builds use Chrome but intents do not work!
                 if (navigator.userAgent.match(/Opera|OPR\//)) {
@@ -93,20 +88,18 @@
         }
 
 
-        $(".source_url").click(function(event) {
+        $(".source_url").click(function(e) {
 
             if (BestPint.isMobile.Android()) {
-
                 //handle Android here
                 launch_app_or_alt_url($(this));
             } else if (BestPint.isMobile.iOS()) {
 
                 //handle iOS (iPhone, iPad) here
-                //TODO
-
+                //TODO: when app is pn the Play Store
             }
 
-            event.preventDefault();
+            e.preventDefault();
         });
 
     }());
