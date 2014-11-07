@@ -2,8 +2,8 @@
 /*global $, jQuery, BestPint*/
 ( function() {"use strict";
         var custom = "epicollect5://view?project=bestpint";
-        var alt = "https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5&hl=en_GB";
-        var g_intent = "intent:#Intent;action=uk.ac.imperial.epicollect5.REQUEST_PROJECT;S.project=bestpint;package=uk.ac.imperial.epicollect5;end";
+        var alt = "https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5&hl=en_GB&referrer=bestpint";
+        var g_intent = "intent:#Intent;action=uk.ac.imperial.epicollect5.REQUEST_PROJECT;S.project=bestpint;S.referrer=bestpint;package=uk.ac.imperial.epicollect5;end";
 
         var timer;
         var heartbeat;
@@ -46,7 +46,24 @@
             document.location = custom;
             timer = setTimeout(function() {
                 document.location = alt;
-            }, 2500);
+            }, 2000);
+        }
+
+        /**
+         * handle Opera browser, showing app chooser
+         * (hopefully the user will open the Play Store, duh!)
+         *
+         */
+        function handleOpera() {
+            document.location = alt;
+        }
+
+        /*
+         * Handle Firefox browser and its crazy behaviour
+         * look here https://support.mozilla.org/en-US/questions/977330
+         */
+        function handleFirefox() {
+            document.location = alt;
         }
 
         /*
@@ -65,34 +82,48 @@
 
             //use Chrome intent (on Chrome > 25 it works)
             if (navigator.userAgent.match(/Chrome/)) {
-
-                alert(navigator.userAgent);
+               //alert(navigator.userAgent);
 
                 //is Opera? The new builds use Chrome but intents do not work!
                 if (navigator.userAgent.match(/Opera|OPR\//)) {
-                    tryIframeApproach();
+
+                    //let's handle Opera browser showing the app chooser
+                    handleOpera();
                 } else {
                     useIntent();
                 }
 
             } else if (navigator.userAgent.match(/Firefox/) || navigator.userAgent.match(/Opera/)) {
 
-                //on Firefox and old Opera, try webkit approach, if that fails, go for the iFrame approach
-                tryWebkitApproach();
-                iframe_timer = setTimeout(function() {
-                    tryIframeApproach();
-                }, 1500);
+                //handle Firefox
+                if (navigator.userAgent.match(/Firefox/)) {
+                    handleFirefox();
+                } else {
+                    //Old Opera, try webkit approach, if that fails, go for the iFrame approach
+                    tryWebkitApproach();
+                    iframe_timer = setTimeout(function() {
+                        tryIframeApproach();
+                    }, 1500);
+                }
+
             } else {
-                tryIframeApproach();
+              // alert("iframe?");
+                //Old Opera, try webkit approach, if that fails, go for the iFrame approach
+                    tryWebkitApproach();
+                    iframe_timer = setTimeout(function() {
+                        tryIframeApproach();
+                    }, 1500);
             }
         }
 
 
         $(".source_url").click(function(e) {
+             //alert(navigator.userAgent);
 
             if (BestPint.isMobile.Android()) {
                 //handle Android here
                 launch_app_or_alt_url($(this));
+                
             } else if (BestPint.isMobile.iOS()) {
 
                 //handle iOS (iPhone, iPad) here
@@ -101,6 +132,10 @@
 
             e.preventDefault();
         });
+        
+        
+        //handle click on download app button, to redirect to App Store or Google Play
+        //TODO
 
     }());
 
