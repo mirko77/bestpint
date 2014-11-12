@@ -2,10 +2,14 @@
 /*global $, jQuery, BestPint*/
 ( function() {"use strict";
 
-        var custom = "epicollect5://view?project=bestpint";
-        var ios_uri = "epicollect5://project=bestpint";
-        var alt = "https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5&hl=en_GB&referrer=bestpint";
-        var g_intent = "intent:#Intent;action=uk.ac.imperial.epicollect5.REQUEST_PROJECT;S.project=bestpint;S.referrer=bestpint;package=uk.ac.imperial.epicollect5;end";
+        var custom = "epicollect5://view?project=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
+        var ios_uri = "epicollect5://project=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
+        var alt = "https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5&hl=en_GB&referrer=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
+        var g_intent = "intent:#Intent;action=uk.ac.imperial.epicollect5.REQUEST_PROJECT;S.project=";
+        g_intent += encodeURI("http://plus.epicollect.net/bestpint.xml");
+        g_intent += ";S.referrer=";
+        g_intent += encodeURI("http://plus.epicollect.net/bestpint.xml");
+        g_intent += ";package=uk.ac.imperial.epicollect5;end";
 
         var timer;
         var heartbeat;
