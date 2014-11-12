@@ -4,6 +4,7 @@
 
         var custom = "epicollect5://view?project=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
         var ios_uri = "epicollect5://project=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
+        // var firefox_android_uri = "http://epicollect5.imperial.ac.uk?project=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
         var alt = "https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5&hl=en_GB&referrer=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
         var g_intent = "intent:#Intent;action=uk.ac.imperial.epicollect5.REQUEST_PROJECT;S.project=";
         g_intent += encodeURI("http://plus.epicollect.net/bestpint.xml");
@@ -69,6 +70,10 @@
          * look here https://support.mozilla.org/en-US/questions/977330
          */
         function handleFirefox() {
+            //does not work
+            //document.location = firefox_android_uri;
+
+            //works
             document.location = alt;
         }
 
