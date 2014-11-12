@@ -166,7 +166,7 @@
         <!-- Custom Theme JavaScript -->
         <script src="js/grayscale.js"></script>
         <script src="js/mobile_detection.js"></script>
-        <script src="js/android_custom_url.js?v=<?php echo rand() ?>"></script>
+        <script src="js/custom_url.js?v=<?php echo rand() ?>"></script>
 
     </body>
 
