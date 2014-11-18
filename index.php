@@ -79,7 +79,15 @@
                             <p class="intro-text">
                                 We love beer, and we think you do too
                                 <br>
-                                Created for thirst by the CGPS team using <a href="http://plus.epicollect.net/">Epicollect+</a>
+                                Created for thirst by
+                                <br/> 
+                                by the <a href="http://citizencyberlab.eu/">CitizenCyberlab</a> team using
+                                <br />
+                                 HTML5
+                                <br />
+                                <img src="http://www.w3.org/html/logo/downloads/HTML5_Badge_512.png" width="64" height="64" />
+                                
+                                
                             </p>
                             <a href="#about" class="btn btn-circle page-scroll"> <i class="fa fa-angle-double-down animated"></i> </a>
                         </div>
@@ -136,6 +144,10 @@
                         <li>
                             <a href="https://plus.google.com/u/0/communities/105939129120315630836" class="btn btn-default btn-lg"><i class="fa fa-google-plus fa-fw"></i> <span class="network-name">Google+</span></a>
                         </li>
+                        <li>
+                            <a href="http://citizencyberlab.eu/" class="btn btn-default btn-lg"><img src="http://citizencyberlab.eu/wp-content/uploads/2012/12/LogoWebsite.png" /></a>
+                        </li>
+                        
                     </ul>
                 </div>
             </div>
