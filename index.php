@@ -80,14 +80,13 @@
                                 We love beer, and we think you do too
                                 <br>
                                 Created for thirst by
-                                <br/> 
+                                <br/>
                                 by the <a href="http://citizencyberlab.eu/">CitizenCyberlab</a> team using
                                 <br />
-                                 HTML5
+                                HTML5
                                 <br />
                                 <img src="http://www.w3.org/html/logo/downloads/HTML5_Badge_512.png" width="64" height="64" />
-                                
-                                
+
                             </p>
                             <a href="#about" class="btn btn-circle page-scroll"> <i class="fa fa-angle-double-down animated"></i> </a>
                         </div>
@@ -119,7 +118,8 @@
                         </p>
                         <!-- <a href="intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;end"> Take a QR code </a> -->
                         <!-- <a href="#" class="btn btn-default btn-lg">Download</a> -->
-                        <a href="https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5&hl=en_GB&referrer=bestpint" class="btn btn-default btn-lg">I do NOT have Epicollect5</a>
+                        <a href="https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5&hl=en_GB&referrer=bestpint" class="btn btn-default btn-lg">I do NOT have it
+                        </a>
                         <!-- <a href="http://open.spotify.com/track/0SPmqpfralFj8hr2ZnbomP">spotify link</a> -->
                     </div>
                 </div>
@@ -147,7 +147,7 @@
                         <li>
                             <a href="http://citizencyberlab.eu/" class="btn btn-default btn-lg"><img src="http://citizencyberlab.eu/wp-content/uploads/2012/12/LogoWebsite.png" /></a>
                         </li>
-                        
+
                     </ul>
                 </div>
             </div>
