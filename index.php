@@ -116,9 +116,12 @@
                         <a href="#" class="source_url btn btn-default btn-lg">I have Epicollect5</a>
                         <p>
                         </p>
+                        
+                        <!-- <a href="intent://#Intent;scheme=epicollect5_64bit;package=uk.ac.imperial.epicollect5_64bit;end">Test here</a> -->
+                        
                         <!-- <a href="intent://scan/#Intent;scheme=zxing;package=com.google.zxing.client.android;end"> Take a QR code </a> -->
                         <!-- <a href="#" class="btn btn-default btn-lg">Download</a> -->
-                        <a href="https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5&hl=en_GB&referrer=bestpint" class="btn btn-default btn-lg">I do NOT have it
+                        <a href="https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5_64bit&hl=en_GB&referrer=bestpint" class="btn btn-default btn-lg">I do NOT have it
                         </a>
                         <!-- <a href="http://open.spotify.com/track/0SPmqpfralFj8hr2ZnbomP">spotify link</a> -->
                     </div>

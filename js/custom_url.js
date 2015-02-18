@@ -3,9 +3,11 @@
 ( function() {"use strict";
 
         var custom = "epicollect5://view?project=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
-        var ios_uri = "epicollect5://project=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
+        var ios_uri = "epicollect5://project=" + encodeURI("plus.epicollect.net/bestpint.xml");
         // var firefox_android_uri = "http://epicollect5.imperial.ac.uk?project=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
         var alt = "https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5&hl=en_GB&referrer=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
+        
+        //TODO: check this intent syntax as it might not work, see test button below
         var g_intent = "intent:#Intent;action=uk.ac.imperial.epicollect5.REQUEST_PROJECT;S.project=";
         g_intent += encodeURI("http://plus.epicollect.net/bestpint.xml");
         g_intent += ";S.referrer=";
@@ -83,7 +85,7 @@
          * https://developer.chrome.com/multidevice/android/intents
          */
         function useIntent() {
-            document.location = g_intent;
+            window.location = g_intent;
         }
 
         function launch_app_or_alt_url(el) {
@@ -136,7 +138,7 @@
                 launch_app_or_alt_url($(this));
 
             } else if (BestPint.isMobile.iOS()) {
-
+            	
                 //handle iOS (iPhone, iPad) here
 
                 //if app not installed, redirect
@@ -147,7 +149,11 @@
                 }, 25);
 
                 //if the app is installed, it will open
-                document.location = ios_uri;
+                //document.location = ios_uri;
+                //TODO:
+                //testing this here as Safari on i8 doe not want '=' or ':' in the URL
+                document.location = "epicollect5://project?plus.epicollect.net/bestpint.xml";
+                //window.location.href = "epicollect5://project?123456";
             }
 
             e.preventDefault();
