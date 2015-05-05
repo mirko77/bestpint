@@ -1,166 +1,170 @@
 /*jslint vars: true , nomen: true devel: true, plusplus: true*/
 /*global $, jQuery, BestPint*/
-( function() {"use strict";
+(function () {
+    "use strict";
 
-        var custom = "epicollect5://view?project=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
-        var ios_uri = "epicollect5://project=" + encodeURI("plus.epicollect.net/bestpint.xml");
-        // var firefox_android_uri = "http://epicollect5.imperial.ac.uk?project=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
-        var alt = "https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollect5&hl=en_GB&referrer=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
-        
-        //TODO: check this intent syntax as it might not work, see test button below
-        var g_intent = "intent:#Intent;action=uk.ac.imperial.epicollect5.REQUEST_PROJECT;S.project=";
-        g_intent += encodeURI("http://plus.epicollect.net/bestpint.xml");
-        g_intent += ";S.referrer=";
-        g_intent += encodeURI("http://plus.epicollect.net/bestpint.xml");
-        g_intent += ";package=uk.ac.imperial.epicollect5;end";
+    var custom = "epicollectplus://view?project=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
+    var ios_uri = "epicollectplus://project=" + encodeURI("plus.epicollect.net/bestpint.xml");
+    // var firefox_android_uri = "http://epicollectplus.imperial.ac.uk?project=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
+    var alt = "https://play.google.com/store/apps/details?id=uk.ac.imperial.epicollectplus.html5&hl=en_GB&referrer=" + encodeURI("http://plus.epicollect.net/bestpint.xml");
 
-        var timer;
-        var heartbeat;
-        var iframe_timer;
+    //TODO: check this intent syntax as it might not work, see test button below
+    var g_intent = "intent:#Intent;action=uk.ac.imperial.epicollectplus.html5.REQUEST_PROJECT;S.project=";
+    g_intent += encodeURI("http://plus.epicollect.net/bestpint.xml");
+    g_intent += ";S.referrer=";
+    g_intent += encodeURI("http://plus.epicollect.net/bestpint.xml");
+    g_intent += ";package=uk.ac.imperial.epicollectplus.html5;launchFlags=268435456;end";
 
-        function clearTimers() {
-            clearTimeout(timer);
-            clearTimeout(heartbeat);
-            clearTimeout(iframe_timer);
+    var timer;
+    var heartbeat;
+    var iframe_timer;
+
+    function clearTimers() {
+        clearTimeout(timer);
+        clearTimeout(heartbeat);
+        clearTimeout(iframe_timer);
+    }
+
+    //clear timers and stop everything if the web page is not visible anymore
+    //which means either the Play Store or the app are on the foreground
+    function intervalHeartbeat() {
+        if (document.webkitHidden || document.hidden) {
+            clearTimers();
+            document.location = "http://bestpint.net";
         }
+    }
 
-        //clear timers and stop everything if the web page is not visible anymore
-        //which means either the Play Store or the app are on the foreground
-        function intervalHeartbeat() {
-            if (document.webkitHidden || document.hidden) {
-                clearTimers();
-                document.location = "http://bestpint.net";
-            }
-        }
-
-        //old browser use the iframe approach (https://developer.chrome.com/multidevice/android/intents)
-        function tryIframeApproach() {
-            var iframe = document.createElement("iframe");
-            iframe.style.border = "none";
-            iframe.style.width = "1px";
-            iframe.style.height = "1px";
-            iframe.onload = function() {
-                document.location = alt;
-            };
-            iframe.src = custom;
-            document.body.appendChild(iframe);
-        }
-
-        /*
-         * Some webkit browsers can handle the scheme, showing an error.
-         * the timeout will load the Play Store page (I tested this on Firefox only,
-         * which displayes a toast warning)
-         */
-        function tryWebkitApproach() {
-            document.location = custom;
-            timer = setTimeout(function() {
-                document.location = alt;
-            }, 2000);
-        }
-
-        /**
-         * handle Opera browser, showing app chooser
-         * (hopefully the user will open the Play Store, duh!)
-         *
-         */
-        function handleOpera() {
+    //old browser use the iframe approach (https://developer.chrome.com/multidevice/android/intents)
+    function tryIframeApproach() {
+        var iframe = document.createElement("iframe");
+        iframe.style.border = "none";
+        iframe.style.width = "1px";
+        iframe.style.height = "1px";
+        iframe.onload = function () {
             document.location = alt;
-        }
+        };
+        iframe.src = custom;
+        document.body.appendChild(iframe);
+    }
 
-        /*
-         * Handle Firefox browser and its crazy behaviour
-         * look here https://support.mozilla.org/en-US/questions/977330
-         */
-        function handleFirefox() {
-            //does not work
-            //document.location = firefox_android_uri;
-
-            //works
+    /*
+     * Some webkit browsers can handle the scheme, showing an error.
+     * the timeout will load the Play Store page (I tested this on Firefox only,
+     * which displayes a toast warning)
+     */
+    function tryWebkitApproach() {
+       // document.location = custom;
+        document.location = "epicollectplus://project?plus.epicollect.net/bestpint.xml";
+        timer = setTimeout(function () {
             document.location = alt;
-        }
+        }, 2000);
+    }
 
-        /*
-         * Use Chrome intent, work on 25+, not sure what happens on <25
-         * as I cannot test... Chrome for Android 25 was released in February 2013
-         * https://developer.chrome.com/multidevice/android/intents
-         */
-        function useIntent() {
-            window.location = g_intent;
-        }
+    /**
+     * handle Opera browser, showing app chooser
+     * (hopefully the user will open the Play Store, duh!)
+     *
+     */
+    function handleOpera() {
+        document.location = alt;
+    }
 
-        function launch_app_or_alt_url(el) {
+    /*
+     * Handle Firefox browser and its crazy behaviour
+     * look here https://support.mozilla.org/en-US/questions/977330
+     */
+    function handleFirefox() {
+        //does not work
+        //document.location = firefox_android_uri;
 
-            //continue to check if the page is still on the foreground
-            heartbeat = setInterval(intervalHeartbeat, 200);
+        //works
+        document.location = alt;
+    }
 
-            //use Chrome intent (on Chrome > 25 it works)
-            if (navigator.userAgent.match(/Chrome/)) {
-                //alert(navigator.userAgent);
+    /*
+     * Use Chrome intent, work on 25+, not sure what happens on <25
+     * as I cannot test... Chrome for Android 25 was released in February 2013
+     * https://developer.chrome.com/multidevice/android/intents
+     */
+    function useIntent() {
 
-                //is Opera? The new builds use Chrome but intents do not work!
-                if (navigator.userAgent.match(/Opera|OPR\//)) {
+        tryWebkitApproach();
+       // window.location = g_intent;
+    }
 
-                    //let's handle Opera browser showing the app chooser
-                    handleOpera();
-                } else {
-                    useIntent();
-                }
+    function launch_app_or_alt_url(el) {
 
-            } else if (navigator.userAgent.match(/Firefox/) || navigator.userAgent.match(/Opera/)) {
+        //continue to check if the page is still on the foreground
+        heartbeat = setInterval(intervalHeartbeat, 200);
 
-                //handle Firefox
-                if (navigator.userAgent.match(/Firefox/)) {
-                    handleFirefox();
-                } else {
-                    //Old Opera, try webkit approach, if that fails, go for the iFrame approach
-                    tryWebkitApproach();
-                    iframe_timer = setTimeout(function() {
-                        tryIframeApproach();
-                    }, 1500);
-                }
+        //use Chrome intent (on Chrome > 25 it works)
+        if (navigator.userAgent.match(/Chrome/)) {
+            //alert(navigator.userAgent);
 
+            //is Opera? The new builds use Chrome but intents do not work!
+            if (navigator.userAgent.match(/Opera|OPR\//)) {
+
+                //let's handle Opera browser showing the app chooser
+                handleOpera();
             } else {
-                // alert("iframe?");
+                useIntent();
+            }
+
+        } else if (navigator.userAgent.match(/Firefox/) || navigator.userAgent.match(/Opera/)) {
+
+            //handle Firefox
+            if (navigator.userAgent.match(/Firefox/)) {
+                handleFirefox();
+            } else {
                 //Old Opera, try webkit approach, if that fails, go for the iFrame approach
                 tryWebkitApproach();
-                iframe_timer = setTimeout(function() {
+                iframe_timer = setTimeout(function () {
                     tryIframeApproach();
                 }, 1500);
             }
+
+        } else {
+            // alert("iframe?");
+            //Old Opera, try webkit approach, if that fails, go for the iFrame approach
+            tryWebkitApproach();
+            iframe_timer = setTimeout(function () {
+                tryIframeApproach();
+            }, 1500);
+        }
+    }
+
+
+    $(".source_url").click(function (e) {
+        //alert(navigator.userAgent);
+
+        if (BestPint.isMobile.Android()) {
+            //handle Android here
+            launch_app_or_alt_url($(this));
+
+        } else if (BestPint.isMobile.iOS()) {
+
+            //handle iOS (iPhone, iPad) here
+
+            //if app not installed, redirect
+            //TODO: test this with real link when app will be published
+            // how to : http://stackoverflow.com/questions/433907/how-to-link-to-apps-on-the-app-store
+            setTimeout(function () {
+                window.location = "itms://itunes.apple.com/us/app/kaon-v-stream/id378890806?mt=8&uo=4";
+            }, 25);
+
+            //if the app is installed, it will open
+            //document.location = ios_uri;
+            //TODO:
+            //testing this here as Safari on i8 doe not want '=' or ':' in the URL
+            document.location = "epicollectplus://project?plus.epicollect.net/bestpint.xml";
+            //window.location.href = "epicollectplus://project?123456";
         }
 
+        e.preventDefault();
+    });
 
-        $(".source_url").click(function(e) {
-            //alert(navigator.userAgent);
+    //handle click on download app button, to redirect to App Store or Google Play
+    //TODO
 
-            if (BestPint.isMobile.Android()) {
-                //handle Android here
-                launch_app_or_alt_url($(this));
-
-            } else if (BestPint.isMobile.iOS()) {
-            	
-                //handle iOS (iPhone, iPad) here
-
-                //if app not installed, redirect
-                //TODO: test this with real link when app will be published
-                // how to : http://stackoverflow.com/questions/433907/how-to-link-to-apps-on-the-app-store
-                setTimeout(function() {
-                    //window.location = "itms://itunes.apple.com/us/app/kaon-v-stream/id378890806?mt=8&uo=4";
-                }, 25);
-
-                //if the app is installed, it will open
-                //document.location = ios_uri;
-                //TODO:
-                //testing this here as Safari on i8 doe not want '=' or ':' in the URL
-                document.location = "epicollect5://project?plus.epicollect.net/bestpint.xml";
-                //window.location.href = "epicollect5://project?123456";
-            }
-
-            e.preventDefault();
-        });
-
-        //handle click on download app button, to redirect to App Store or Google Play
-        //TODO
-
-    }());
+}());
 
