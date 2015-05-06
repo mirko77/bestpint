@@ -65,7 +65,7 @@
                     <a class="page-scroll" href="#contact">Contact</a>
                 </li>
                 <li>
-                    <a class="page-scroll" href="map.php">Map</a>
+                    <a class="page-scroll" href="map">Map</a>
                 </li>
             </ul>
         </div>
@@ -118,11 +118,13 @@
             <h2>About Bestpint.net</h2>
 
             <p>
-                Bestpint is a test project which uses <a href="http://www.epicollect.net/">Epicollect+</a> and Bestpint app to
+                Bestpint is a proof of concept project which uses <a href="http://www.epicollect.net/">Epicollect+</a> and Bestpint app to
                 collect data
                 about pints of beer all around the world!
             </p>
             <p><i class="fa fa-map-marker fa-2x fa-fw"></i><a href="http://plus.epicollect.net/bestpint/Beer">View data on Epicollect+</a><i class="fa fa-table fa-2x fa-fw"></i></p>
+            <br/>
+            <p><i class="fa fa-globe fa-2x fa-fw"></i><a href="map">View map here</a></p>
         </div>
     </div>
 </section>
