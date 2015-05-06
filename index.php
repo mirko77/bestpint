@@ -12,7 +12,7 @@
     <title>Bestpint.net - In pursuit of the best pint</title>
 
     <!--Favicon  -->
-    <link rel="icon" type="image/png" href="favicon.png?v=4">
+    <link rel="icon" type="image/png" href="img/favicon.png?v=4">
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -63,6 +63,9 @@
                 </li>
                 <li>
                     <a class="page-scroll" href="#contact">Contact</a>
+                </li>
+                <li>
+                    <a class="page-scroll" href="map.php">Map</a>
                 </li>
             </ul>
         </div>

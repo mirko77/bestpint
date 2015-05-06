@@ -8,6 +8,30 @@ $(document).ready(function () {
     var entries;
     var map;
     var mapOptions;
+    var is_device;
+    var device_lat;
+    var device_long;
+
+    var isMobile = {
+        Android: function () {
+            return navigator.userAgent.match(/Android/i);
+        },
+        BlackBerry: function () {
+            return navigator.userAgent.match(/BlackBerry/i);
+        },
+        iOS: function () {
+            return navigator.userAgent.match(/iPhone|iPad|iPod/i);
+        },
+        Opera: function () {
+            return navigator.userAgent.match(/Opera Mini/i);
+        },
+        Windows: function () {
+            return navigator.userAgent.match(/IEMobile/i);
+        },
+        any: function () {
+            return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows());
+        }
+    };
 
     var bestpint = {
         created: '',
@@ -75,24 +99,28 @@ $(document).ready(function () {
     }
 
     //http://joaopereirawd.github.io/fakeLoader.js/
-    $(document).ready(function () {
-        fakeloader = $('#fakeloader');
-        fakeloader.fakeLoader({
-            timeToHide: 1500,
-            bgColor: '#333',
-            spinner: 'spinner1'
-        });
 
-
+    fakeloader = $('#fakeloader');
+    fakeloader.fakeLoader({
+        timeToHide: 1000000,
+        bgColor: '#333',
+        spinner: 'spinner1'
     });
+
 
     function _createInfoWindowContent(the_entry) {
 
-        var deferred = new $.Deferred();
         var entry = the_entry;
         var html = '';
+
+        //replace missing images (and the horrible ec+ placeholder) with nice placeholder
+        if (entry.ecplus_Beer_ctrl7 === undefined || entry.ecplus_Beer_ctrl7.indexOf('thumbnail=true') > -1) {
+            entry.ecplus_Beer_ctrl7 = 'img/placeholder.png';
+        }
+
+
         html += '<table class="infoWindow table table-striped table-bordered table-condensed">';
-        html += '<thead><tr><th colspan="2" class="text-center">' + 'Bestpint entry' + '</th></tr></thead>';
+        html += '<thead><tr><th colspan="2" class="text-center">' + (entry.ecplus_Beer_ctrl6 || '') + '</th></tr></thead>';
         html += '<tbody>';
 
 
@@ -101,19 +129,19 @@ $(document).ready(function () {
         //name of the place
         html += '<tr>';
         html += '<td>' + bestpint.ecplus_Beer_ctrl13 + '</td>';
-        html += '<td>' + entry.ecplus_Beer_ctrl13 + '</td>';
+        html += '<td>' + (entry.ecplus_Beer_ctrl13 || '') + '</td>';
         html += '</tr>';
 
         //type of place
         html += '<tr>';
         html += '<td>' + bestpint.ecplus_Place_ctrl4.key + '</td>';
-        html += '<td>' + bestpint.ecplus_Place_ctrl4.values[entry.ecplus_Place_ctrl4] + '</td>';
+        html += '<td>' + (bestpint.ecplus_Place_ctrl4.values[entry.ecplus_Place_ctrl4] || '') + '</td>';
         html += '</tr>';
 
         //Name of beer
         html += '<tr>';
         html += '<td>' + bestpint.ecplus_Beer_ctrl6 + '</td>';
-        html += '<td>' + entry.ecplus_Beer_ctrl6 + '</td>';
+        html += '<td>' + (entry.ecplus_Beer_ctrl6 || '') + '</td>';
         html += '</tr>';
 
         //Brewery
@@ -125,25 +153,26 @@ $(document).ready(function () {
         //Type of beer
         html += '<tr>';
         html += '<td>' + bestpint.ecplus_Beer_ctrl9.key + '</td>';
-        html += '<td>' + bestpint.ecplus_Beer_ctrl9.values[entry.ecplus_Beer_ctrl9] + '</td>';
+        html += '<td>' + (bestpint.ecplus_Beer_ctrl9.values[entry.ecplus_Beer_ctrl9] || '') + '</td>';
         html += '</tr>';
 
         //photo (todo check for landscape and portrait)
         html += '<tr>';
         html += '<td>' + bestpint.ecplus_Beer_ctrl7 + '</td>';
-        html += '<td style:"height: 200px" ><img src="' + entry.ecplus_Beer_ctrl7 + '" width="100" /></td>';
+        //set fixed height for table cell to avoid cell resizing messing up the auto panning when infoWindow is open
+        html += '<td height="200" class="pint-image-cell"><img class="pint-image" src="' + entry.ecplus_Beer_ctrl7 + '" width="100" /></td>';
         html += '</tr>';
 
         //How would you rate it
         html += '<tr>';
         html += '<td>' + bestpint.ecplus_Beer_ctrl14.key + '</td>';
-        html += '<td>' + bestpint.ecplus_Beer_ctrl14.values[entry.ecplus_Beer_ctrl14] + '</td>';
+        html += '<td>' + (bestpint.ecplus_Beer_ctrl14.values[entry.ecplus_Beer_ctrl14] || '') + '</td>';
         html += '</tr>';
 
         //how is the price range
         html += '<tr>';
         html += '<td>' + bestpint.ecplus_Beer_ctrl11.key + '</td>';
-        html += '<td>' + bestpint.ecplus_Beer_ctrl11.values[entry.ecplus_Beer_ctrl11] + '</td>';
+        html += '<td>' + (bestpint.ecplus_Beer_ctrl11.values[entry.ecplus_Beer_ctrl11] || '') + '</td>';
         html += '</tr>';
 
         //price and currency
@@ -161,30 +190,19 @@ $(document).ready(function () {
         html += '</tbody>';
         html += '</table>';
 
-        $("img").one("load", function () {
-
-            deferred.resolve(html);
-            // do stuff
-        }).each(function () {
-            if (this.complete) {
-                $(this).load();
-            }
-        });
-
-        //$('img').on('load',function () {
-        //
-        //    deferred.resolve(html);
-        //
-        //});
-
-        return deferred.promise();
+        return html;
     }
 
     function initialize() {
 
+        if (is_device) {
+            $('#map-canvas').height('100vh');
+        }
+
         mapOptions = {
             center: {lat: 0, lng: 0},
-            zoom: 8
+            zoom: 6,
+            disableDefaultUI: is_device ? true : false
         };
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
@@ -215,26 +233,43 @@ $(document).ready(function () {
                 //add infoWindow
                 google.maps.event.addListener(marker, 'click', (function (marker, i) {
                     return function () {
-
-                        $.when(_createInfoWindowContent(entries[i])).then(function (response) {
-
-                            infowindow.setContent(response);
-                            infowindow.open(map, marker);
-                        });
+                        infowindow.setContent(_createInfoWindowContent(entries[i]));
+                        infowindow.open(map, marker);
                     };
                 })(marker, i));
 
             }
 
-            //fit map to bounds
-            map.fitBounds(bounds);
+            if (!is_device || !(device_lat && device_long)) {
+                map.setCenter(bounds.getCenter());
+
+                //fit map to bounds
+                map.fitBounds(bounds);
+            }
+            else {
+                map.setCenter(new google.maps.LatLng(device_lat, device_long));
+                map.setZoom(10);
+            }
+
+
+            var listener = google.maps.event.addListener(map, "idle", function () {
+                //    console.log(map.getZoom());
+                //
+                //   // map.setZoom(map.getZoom() + 1);
+                fakeloader.fadeOut();
+                //
+                google.maps.event.removeListener(listener);
+            });
         }
 
 
         addMarkers();
     }
 
-    ///try a cors request to epicollect server using yql https://developer.yahoo.com/yql
+    is_device = isMobile.any();
+
+
+///try a cors request to epicollect server using yql https://developer.yahoo.com/yql
     $.getJSON("http://query.yahooapis.com/v1/public/yql",
         {
             q: "select * from json where url='http://plus.epicollect.net/Bestpint/Beer.json'",
@@ -246,12 +281,33 @@ $(document).ready(function () {
             console.log(data.query.results.json.json);
 
 
-            //on Bestpint project on Epicollect+, 'ecplus_Place_ctrl3' is the key of the location object
+            //get user location (on mobile only) to give just the entries around the area
+            if (is_device) {
 
-            //display entries on map
-            //init maps
-            initialize();
+                //get current position first
+                var onPosSuccess = function (position) {
 
-            fakeloader.fadeOut();
+                    device_lat = position.coords.latitude;
+                    device_long = position.coords.longitude
+
+                    initialize();
+                }
+
+                var onPosError = function (error) {
+                    console.log(error);
+                    initialize();
+                }
+
+                navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError);
+
+
+            }
+            else {
+                //display entries on map
+                //init maps
+                initialize();
+            }
+
+
         });
 });
