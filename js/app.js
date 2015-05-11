@@ -99,13 +99,14 @@ $(document).ready(function () {
     }
 
     //http://joaopereirawd.github.io/fakeLoader.js/
-
     fakeloader = $('#fakeloader');
     fakeloader.fakeLoader({
         timeToHide: 1000000,
         bgColor: '#333',
         spinner: 'spinner1'
     });
+
+    $('#proxy-error').hide();
 
 
     function _createInfoWindowContent(the_entry) {
@@ -219,13 +220,16 @@ $(document).ready(function () {
 
                 console.log(entries[i].ecplus_Place_ctrl3.latitude, ', ' + entries[i].ecplus_Place_ctrl3.longitude);
 
-                latlong = new google.maps.LatLng(entries[i].ecplus_Place_ctrl3.latitude, entries[i].ecplus_Place_ctrl3.longitude);
-                marker = new google.maps.Marker({
-                    position: latlong,
-                    map: map,
-                    title: entries[i].ecplus_Beer_ctrl13 + ', ' + entries[i].ecplus_Beer_ctrl6,
-                    icon: image
-                });
+                if (entries[i].ecplus_Place_ctrl3.latitude !== "") {
+
+                    latlong = new google.maps.LatLng(entries[i].ecplus_Place_ctrl3.latitude, entries[i].ecplus_Place_ctrl3.longitude);
+                    marker = new google.maps.Marker({
+                        position: latlong,
+                        map: map,
+                        title: entries[i].ecplus_Beer_ctrl13 + ', ' + entries[i].ecplus_Beer_ctrl6,
+                        icon: image
+                    });
+                }
 
                 //add current marker to bounds
                 bounds.extend(latlong);
@@ -275,37 +279,50 @@ $(document).ready(function () {
             q: "select * from json where url='http://plus.epicollect.net/Bestpint/Beer.json'",
             format: "json"
         },
-        function (data) {
+        function (data, status) {
             //console.log(data);
-            entries = data.query.results.json.json;
-            console.log(data.query.results.json.json);
+            console.log(status);
+
+            //if the proxy is down for some reasons, show error message
+            if (data.query.results) {
+
+                entries = data.query.results.json.json;
+                console.log(data.query.results.json.json);
 
 
-            //get user location (on mobile only) to give just the entries around the area
-            if (is_device) {
+                //get user location (on mobile only) to give just the entries around the area
+                if (is_device) {
 
-                //get current position first
-                var onPosSuccess = function (position) {
+                    //get current position first
+                    var onPosSuccess = function (position) {
 
-                    device_lat = position.coords.latitude;
-                    device_long = position.coords.longitude
+                        device_lat = position.coords.latitude;
+                        device_long = position.coords.longitude
 
+                        initialize();
+                    }
+
+                    var onPosError = function (error) {
+                        console.log(error);
+                        initialize();
+                    }
+
+                    navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError);
+
+
+                }
+                else {
+                    //display entries on map
+                    //init maps
                     initialize();
                 }
-
-                var onPosError = function (error) {
-                    console.log(error);
-                    initialize();
-                }
-
-                navigator.geolocation.getCurrentPosition(onPosSuccess, onPosError);
-
-
             }
             else {
-                //display entries on map
-                //init maps
-                initialize();
+
+                $('#map-canvas').hide();
+                $('#proxy-error').show();
+                fakeloader.fadeOut();
+
             }
 
 

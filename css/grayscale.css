@@ -375,3 +375,6 @@ body {
 .infoWindow {
     color:#333;
 }
+#proxy-error {
+    text-align: center;
+}

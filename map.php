@@ -107,6 +107,7 @@
 
 <div id="fakeloader"></div>
 <section id="map-canvas"></section>
+<section id="proxy-error"><h3>Sorry <br/> an error occurred when requesting data <br/> please try later!</h3></section>
 <script src="js/app.js"></script>
 </body>
 </html>
