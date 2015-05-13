@@ -229,19 +229,18 @@ $(document).ready(function () {
                         title: entries[i].ecplus_Beer_ctrl13 + ', ' + entries[i].ecplus_Beer_ctrl6,
                         icon: image
                     });
+
+                    //add current marker to bounds
+                    bounds.extend(latlong);
+
+                    //add infoWindow
+                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                        return function () {
+                            infowindow.setContent(_createInfoWindowContent(entries[i]));
+                            infowindow.open(map, marker);
+                        };
+                    })(marker, i));
                 }
-
-                //add current marker to bounds
-                bounds.extend(latlong);
-
-                //add infoWindow
-                google.maps.event.addListener(marker, 'click', (function (marker, i) {
-                    return function () {
-                        infowindow.setContent(_createInfoWindowContent(entries[i]));
-                        infowindow.open(map, marker);
-                    };
-                })(marker, i));
-
             }
 
             if (!is_device || !(device_lat && device_long)) {
