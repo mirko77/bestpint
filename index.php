@@ -93,7 +93,7 @@
                         <br>
                         Created for thirst by
                         <br/>
-                        by the <a href="http://citizencyberlab.eu/">CitizenCyberlab</a> team using
+                        the <a href="http://citizencyberlab.eu/">CitizenCyberlab</a> team using
                         <a href="http://www.epicollect.net/">Epicollect+</a>
 
                         <a href="http://www.epicollect.net/">
