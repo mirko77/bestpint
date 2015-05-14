@@ -11,7 +11,8 @@ $(document).ready(function () {
     var is_device;
     var device_lat;
     var device_long;
-    var oms;
+    var cluster;
+    var tiles;
 
     var isMobile = {
         Android: function () {
@@ -86,18 +87,18 @@ $(document).ready(function () {
 
     };
 
-    var image = {
-        url: 'img/marker-icon.png',
-        size: new google.maps.Size(128, 128),
+    var image = L.icon({
+        iconUrl: 'img/marker-icon.png',
+        // size: new google.maps.Size(128, 128),
 
         //size to be displayed (down from orignal 128 x128)
-        scaledSize: new google.maps.Size(32, 32),
+        iconSize: [32, 32],
 
         //origin of the image is 0,0 top left
-        origin: new google.maps.Point(0, 0),
+        //  origin: new google.maps.Point(0, 0),
         //specify the anchor based on the scaled image (i.e keep the image centerd over the lat,long location otherwise it shifts)
-        anchor: new google.maps.Point(16, 16)
-    }
+        iconAnchor: [16, 16]
+    });
 
     //http://joaopereirawd.github.io/fakeLoader.js/
     fakeloader = $('#fakeloader');
@@ -121,7 +122,7 @@ $(document).ready(function () {
         }
 
 
-        html += '<table class="infoWindow table table-striped table-bordered table-condensed">';
+        html += '<table class="infoWindow table-striped table-bordered table-condensed">';
         html += '<thead><tr><th colspan="2" class="text-center">' + (entry.ecplus_Beer_ctrl6 || '') + '</th></tr></thead>';
         html += '<tbody>';
 
@@ -158,11 +159,20 @@ $(document).ready(function () {
         html += '<td>' + (bestpint.ecplus_Beer_ctrl9.values[entry.ecplus_Beer_ctrl9] || '') + '</td>';
         html += '</tr>';
 
-        //photo (todo check for landscape and portrait)
+
         html += '<tr>';
-        html += '<td>' + bestpint.ecplus_Beer_ctrl7 + '</td>';
+        html += '<td colspan="2" class="text-center">' + bestpint.ecplus_Beer_ctrl7 + '</td>';
+        html += '</tr>';
+        html += '<tr colspan="2">';
         //set fixed height for table cell to avoid cell resizing messing up the auto panning when infoWindow is open
-        html += '<td height="200" class="pint-image-cell"><img class="pint-image" src="' + entry.ecplus_Beer_ctrl7 + '" width="100" /></td>';
+        html += '<tr><td colspan="2" class="img-wrapper">';
+        html += '<div class="desktop-frame-square">';
+        html += '<div class="crop">';
+        html += '<i class="fa fa-spinner fa-spin fa-3x"></i>';
+        html += '<img src="' + entry.ecplus_Beer_ctrl7 + '" alt="" title="" width="200">';
+        html += '</div>';
+        html += '</div>';
+        html += '</td></tr>';
         html += '</tr>';
 
         //How would you rate it
@@ -195,6 +205,53 @@ $(document).ready(function () {
         return html;
     }
 
+    function _createMobileInfoContent(the_entry) {
+
+        var entry = the_entry;
+        var html = '';
+
+        //replace missing images (and the horrible ec+ placeholder) with nice placeholder
+        if (entry.ecplus_Beer_ctrl7 === undefined || entry.ecplus_Beer_ctrl7.indexOf('thumbnail=true') > -1 || entry.ecplus_Beer_ctrl7 === '') {
+            entry.ecplus_Beer_ctrl7 = 'img/placeholder.png';
+        }
+
+
+        html += '<table class="mobile-info-window table-condensed table-bordered table-striped">';
+        html += '<thead><tr><th colspan="2" class="text-center">' + (entry.ecplus_Beer_ctrl6 || '') + ', ' + (entry.ecplus_Beer_ctrl13 || '') + '</th></tr></thead>';
+        html += '<tbody>';
+
+        //How would you rate it
+        html += '<tr>';
+        html += '<td>' + bestpint.ecplus_Beer_ctrl14.key + '</td>';
+        html += '<td>' + (bestpint.ecplus_Beer_ctrl14.values[entry.ecplus_Beer_ctrl14] || '') + '</td>';
+        html += '</tr>';
+
+        html += '<tr>';
+        html += '<td>' + bestpint.ecplus_Beer_ctrl11.key + '</td>';
+        html += '<td>' + (bestpint.ecplus_Beer_ctrl11.values[entry.ecplus_Beer_ctrl11] || '') + '</td>';
+        html += '</tr>';
+
+        // html += '<tr>';
+        //set fixed height for table cell to avoid cell resizing messing up the auto panning when infoWindow is open
+        // html += '<td height="75" class="pint-image-cell" colspan="2"><img class="pint-image" src="' + entry.ecplus_Beer_ctrl7 + '" width="100" /></td>';
+        // html += '</tr>';
+
+        html += '<tr><td colspan="2" class="img-wrapper">';
+        html += '<div class="frame-square">';
+        html += '<div class="crop">';
+        html += '<i class="fa fa-spinner fa-spin fa-3x"></i>';
+        html += '<img src="' + entry.ecplus_Beer_ctrl7 + '" alt="" title="small wide image">';
+        html += '</div>';
+        html += '</div>';
+        html += '</td></tr>';
+
+        html += '</tbody>';
+        html += '</table>';
+
+
+        return html;
+    }
+
     function initialize() {
 
         if (is_device) {
@@ -204,18 +261,32 @@ $(document).ready(function () {
         mapOptions = {
             center: {lat: 0, lng: 0},
             zoom: 6,
-            disableDefaultUI: is_device ? true : false
+            zoomControl: false
+            //disableDefaultUI: is_device ? true : false
         };
-        map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+        // initialize the map on the "map" div with a given center and zoom
+        map = L.map('map-canvas', mapOptions);
+        tiles = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        ////center popup when it is open
+        map.on('popupopen', function (e) {
+            var px = map.project(e.popup._latlng); // find the pixel location on the map where the popup anchor is
+            px.y -= e.popup._container.clientHeight / 2;// find the height of the popup container, divide by 2, subtract from the Y axis of marker location
+            map.panTo(map.unproject(px), {animate: true}); // pan to new center
+        });
 
         function addMarkers() {
 
             var i;
             var iLength = entries.length;
-            var bounds = new google.maps.LatLngBounds();
-            var latlong;
             var marker;
-            var infowindow = new google.maps.InfoWindow();
+            var coords = [];
+
+
+            cluster = new L.MarkerClusterGroup({showCoverageOnHover: false, maxClusterRadius: 10});
 
             for (i = 0; i < iLength; i++) {
 
@@ -223,49 +294,54 @@ $(document).ready(function () {
 
                 if (entries[i].ecplus_Place_ctrl3.latitude !== "") {
 
-                    latlong = new google.maps.LatLng(entries[i].ecplus_Place_ctrl3.latitude, entries[i].ecplus_Place_ctrl3.longitude);
-                    marker = new google.maps.Marker({
-                        position: latlong,
-                        map: map,
-                        title: entries[i].ecplus_Beer_ctrl13 + ', ' + entries[i].ecplus_Beer_ctrl6,
-                        icon: image
-                    });
 
-                    //add current marker to bounds
-                    bounds.extend(latlong);
+                    marker = L.marker([entries[i].ecplus_Place_ctrl3.latitude, entries[i].ecplus_Place_ctrl3.longitude], {icon: image});
+                    // marker.addTo(map);
 
-                    //add infoWindow
-                    google.maps.event.addListener(marker, 'click', (function (marker, i) {
-                        return function () {
-                            infowindow.setContent(_createInfoWindowContent(entries[i]));
-                            infowindow.open(map, marker);
-                        };
-                    })(marker, i));
+                    if (!is_device) {
+                        //on desktop, create full info window content (bootstrap table)
+                        marker.bindPopup(_createInfoWindowContent(entries[i]));
+                    }
+                    else {
+
+                        //on device, show a mobile friendly info window with crucial data only (titles + picture (if any))
+                        marker.bindPopup(_createMobileInfoContent(entries[i]), {closeButton: false});
+                    }
+
+
+                    //marker.bindPopup(_createLeafletPopupContent(entries[i]));
+                    //marker.on('dragend', function (e) {
+                    //    marker.openPopup();
+                    //});
+                    coords.push([entries[i].ecplus_Place_ctrl3.latitude, entries[i].ecplus_Place_ctrl3.longitude]);
+                    cluster.addLayer(marker);
+
                 }
             }
 
+            //fit bounds to data set
+            map.fitBounds(coords, {padding: [50, 50]});
+            map.addLayer(cluster);
+
             if (!is_device || !(device_lat && device_long)) {
-                map.setCenter(bounds.getCenter());
+                // map.setCenter(bounds.getCenter());
 
                 //fit map to bounds
-                map.fitBounds(bounds);
+                // map.fitBounds(bounds);
             }
             else {
-                map.setCenter(new google.maps.LatLng(device_lat, device_long));
-                map.setZoom(10);
+                // map.setCenter(new google.maps.LatLng(device_lat, device_long));
+                // map.setZoom(10);
             }
 
 
-            var listener = google.maps.event.addListener(map, "idle", function () {
-                //    console.log(map.getZoom());
-                //
-                //   // map.setZoom(map.getZoom() + 1);
+            tiles.on("load", function () {
+
+                console.log("all visible tiles have been loaded");
                 fakeloader.fadeOut();
-                //
-                google.maps.event.removeListener(listener);
+
             });
         }
-
 
         addMarkers();
     }

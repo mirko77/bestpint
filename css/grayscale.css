@@ -372,9 +372,71 @@ body {
     /*height:100vh;*/
     display: block;
 }
-.infoWindow {
-    color:#333;
+.infoWindow, .leaflet-popup-content{
+    color: #333333!important;
 }
 #proxy-error {
     text-align: center;
 }
+
+td.img-wrapper {
+    text-align:center;
+}
+
+.mobile-info-window td.img-wrapper i.fa.fa-spinner.fa-spin.fa-3x {
+    vertical-align: middle;
+    margin-top: 40%;
+}
+
+/**Crop images to square css *************************/
+.frame-square, .frame-round {
+    background: #fff;
+    /*border: 2px solid #000;*/
+    display: inline-block;
+    /*vertical-align: top;*/
+    padding: 10px;
+    width: 200px;
+    height: 200px;
+    /*margin-right: .5em;*/
+    /*margin-bottom: .3em;*/
+}
+
+.leaflet-popup-scrolled {
+    overflow-x:hidden;
+}
+
+.desktop-frame-square, .desktop-frame-round {
+    background: #fff;
+    display: inline-block;
+    padding: 10px;
+    width: 200px;
+    height: 200px;
+
+
+}
+
+.frame-round {
+    border-radius: 50%;
+    overflow: hidden;
+}
+.frame-round .crop {
+    border-radius: 50%;
+}
+
+.crop {
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+.crop img {
+    display: block;
+    min-width: 100%;
+    min-height: 100%;
+    margin: auto;
+    position: absolute;
+    top: -100%;
+    right: -100%;
+    bottom: -100%;
+    left: -100%;
+}
+/*********************************************/
