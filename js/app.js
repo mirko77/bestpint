@@ -11,6 +11,7 @@ $(document).ready(function () {
     var is_device;
     var device_lat;
     var device_long;
+    var mc;
 
     var isMobile = {
         Android: function () {
@@ -207,6 +208,7 @@ $(document).ready(function () {
         };
         map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
+
         function addMarkers() {
 
             var i;
@@ -215,6 +217,7 @@ $(document).ready(function () {
             var latlong;
             var marker;
             var infowindow = new google.maps.InfoWindow();
+            var markers =[];
 
             for (i = 0; i < iLength; i++) {
 
@@ -241,6 +244,8 @@ $(document).ready(function () {
                         };
                     })(marker, i));
                 }
+
+                markers.push(marker);
             }
 
             if (!is_device || !(device_lat && device_long)) {
@@ -263,6 +268,9 @@ $(document).ready(function () {
                 //
                 google.maps.event.removeListener(listener);
             });
+
+
+            mc = new MarkerClusterer(map, markers);
         }
 
 
