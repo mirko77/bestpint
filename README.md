@@ -14,7 +14,8 @@ Working on a Google Maps and Open Layers implementations
 <p align="center">
 <img src="https://lh3.googleusercontent.com/o9Vis8sfL63rFhQCn1FFPLfz1FRDxXrZY-kJ63zlmPWtUVNouFTdq0uitTLMdycpm2qG=w300-rw" />
 </p>
-
-<a align="center" href="https://play.google.com/store/apps/details?id=net.bestpint.app">
+<p align="center">
+<a  href="https://play.google.com/store/apps/details?id=net.bestpint.app">
   <img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_60.png" />
 </a>
+</p>
