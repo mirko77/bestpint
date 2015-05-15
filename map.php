@@ -1,36 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-
     <title>Bestpint.net - In pursuit of the best pint</title>
-
     <!--Favicon  -->
     <link rel="icon" type="image/png" href="img/favicon.png?v=4">
-
-    <!-- Bootstrap Core CSS -->
-    <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
-
-    <!-- Custom CSS -->
-    <!--<link href="css/grayscale.css" rel="stylesheet">-->
-    <!--<link rel="stylesheet" href="css/fakeloader.css">-->
-
     <!-- Custom Fonts -->
     <!--<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">-->
     <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-    <!--<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />-->
-    <!--<link rel="stylesheet" href="css/MarkerCluster.css" />-->
-    <!--<link rel="stylesheet" href="css/MarkerCluster.Default.css" />-->
 
     <link rel="stylesheet" href="css/bestpint.css">
-
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>

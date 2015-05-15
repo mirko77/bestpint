@@ -13,6 +13,7 @@ var app_styles_path = './css/';
 gulp.task('vendor-scripts', function () {
     return gulp.src([vendor_path + '*.js', '!./js/vendor/chance.js'])//this works, re-add chance.js when testing
        // .pipe(gulpignore.exclude('./js/vendor/chance.js'))
+        .pipe(sourcemaps.init())
         .pipe(order([
             'js/vendor/jquery-1.11.0.js',
             'js/vendor/jquery.easing.min.js',
@@ -22,6 +23,7 @@ gulp.task('vendor-scripts', function () {
         ], {base: './'}))
         .pipe(concat('vendor.js'))
         .pipe(uglify())
+        .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./js/dist/'));
 });
 
@@ -42,10 +44,10 @@ gulp.task('app-styles', function () {
         .pipe(gulp.dest('./css/'));
 });
 
-// Default Task
+// Default Task (re-run manually when adding a vendor)
 gulp.task('default', ['vendor-scripts', 'app-modules', 'app-styles'], function () {
     // watch for JS changes
-    gulp.watch('./js/**/*.js', ['vendor-scripts', 'app-modules']);
+    gulp.watch('./js/**/*.js', ['app-modules']);
     // watch for CSS changes
     gulp.watch('./css/*.css', ['app-styles']);
 });
