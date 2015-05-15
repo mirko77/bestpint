@@ -412,10 +412,12 @@ td.img-wrapper {
     text-align: center;
 }
 
-.mobile-info-window td.img-wrapper i.fa.fa-spinner.fa-spin.fa-3x {
-    vertical-align: middle;
-    margin-top: 40%;
+/* spinner gets centered*/
+td.img-wrapper i.fa.fa-spinner.fa-spin.fa-3x {
+    vertical-align: middle!important;
+    margin-top: 40%!important;
 }
+
 
 /* Leaflet*/
 .leaflet-top {
