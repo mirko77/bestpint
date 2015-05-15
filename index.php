@@ -13,17 +13,17 @@
 
     <!--Favicon  -->
     <link rel="icon" type="image/png" href="img/favicon.png?v=4">
+    <link rel="stylesheet" href="css/bestpint.css">
 
     <!-- Bootstrap Core CSS -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!--<link href="css/bootstrap.min.css" rel="stylesheet">-->
 
     <!-- Custom CSS -->
-    <link href="css/grayscale.css" rel="stylesheet">
+    <!--<link href="css/grayscale.css" rel="stylesheet">-->
 
     <!-- Custom Fonts -->
-    <link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet"
-          type="text/css">
+    <!--<link href="css/font-awesome.min.css" rel="stylesheet" type="text/css">-->
+    <link href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css">
     <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -122,8 +122,11 @@
                 collect data
                 about pints of beer all around the world!
             </p>
-            <p><i class="fa fa-map-marker fa-2x fa-fw"></i><a href="http://plus.epicollect.net/bestpint/Beer">View data on Epicollect+</a><i class="fa fa-table fa-2x fa-fw"></i></p>
+
+            <p><i class="fa fa-map-marker fa-2x fa-fw"></i><a href="http://plus.epicollect.net/bestpint/Beer">View data on Epicollect+</a><i class="fa fa-table fa-2x fa-fw"></i>
+            </p>
             <br/>
+
             <p><i class="fa fa-globe fa-2x fa-fw"></i><a href="map">View map here</a></p>
         </div>
     </div>
@@ -199,21 +202,8 @@
         </p>
     </div>
 </footer>
-
-<!-- jQuery Version 1.11.0 -->
-<script src="js/jquery-1.11.0.js"></script>
-
-<!-- Bootstrap Core JavaScript -->
-<script src="js/bootstrap.min.js"></script>
-
-<!-- Plugin JavaScript -->
-<script src="js/jquery.easing.min.js"></script>
-
-<!-- Custom Theme JavaScript -->
-<script src="js/grayscale.js"></script>
-<script src="js/mobile_detection.js"></script>
-<script src="js/custom_url.js?v=<?php echo rand() ?>"></script>
-
+<!-- JavaScript -->
+<script src="js/dist/vendor.js"></script>
+<script src="js/dist/bestpint.js"></script>
 </body>
-
 </html>

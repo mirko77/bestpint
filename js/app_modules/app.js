@@ -1,4 +1,4 @@
-/* */
+/* global L, $ */
 $(document).ready(function () {
     'use strict';
 
@@ -160,9 +160,9 @@ $(document).ready(function () {
         html += '</tr>';
 
 
-        html += '<tr>';
-        html += '<td colspan="2" class="text-center">' + bestpint.ecplus_Beer_ctrl7 + '</td>';
-        html += '</tr>';
+        //html += '<tr>';
+        //html += '<td colspan="2" class="text-center">' + bestpint.ecplus_Beer_ctrl7 + '</td>';
+        //html += '</tr>';
         html += '<tr colspan="2">';
         //set fixed height for table cell to avoid cell resizing messing up the auto panning when infoWindow is open
         html += '<tr><td colspan="2" class="img-wrapper">';
@@ -215,7 +215,6 @@ $(document).ready(function () {
             entry.ecplus_Beer_ctrl7 = 'img/placeholder.png';
         }
 
-
         html += '<table class="mobile-info-window table-condensed table-bordered table-striped">';
         html += '<thead><tr><th colspan="2" class="text-center">' + (entry.ecplus_Beer_ctrl6 || '') + ', ' + (entry.ecplus_Beer_ctrl13 || '') + '</th></tr></thead>';
         html += '<tbody>';
@@ -231,10 +230,6 @@ $(document).ready(function () {
         html += '<td>' + (bestpint.ecplus_Beer_ctrl11.values[entry.ecplus_Beer_ctrl11] || '') + '</td>';
         html += '</tr>';
 
-        // html += '<tr>';
-        //set fixed height for table cell to avoid cell resizing messing up the auto panning when infoWindow is open
-        // html += '<td height="75" class="pint-image-cell" colspan="2"><img class="pint-image" src="' + entry.ecplus_Beer_ctrl7 + '" width="100" /></td>';
-        // html += '</tr>';
 
         html += '<tr><td colspan="2" class="img-wrapper">';
         html += '<div class="frame-square">';
@@ -261,14 +256,18 @@ $(document).ready(function () {
         mapOptions = {
             center: {lat: 0, lng: 0},
             zoom: 6,
-            zoomControl: false
+            zoomControl: is_device ? false : true
             //disableDefaultUI: is_device ? true : false
         };
 
+        //set default images path since we are using a custom location
+        L.Icon.Default.imagePath = './img/leaflet/';
+
         // initialize the map on the "map" div with a given center and zoom
         map = L.map('map-canvas', mapOptions);
+        //  map.addControl(L.control.zoom({position: 'bottomleft'}));
         tiles = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         }).addTo(map);
 
         ////center popup when it is open
@@ -283,6 +282,7 @@ $(document).ready(function () {
             var i;
             var iLength = entries.length;
             var marker;
+            var position;
             var coords = [];
 
 
@@ -290,7 +290,7 @@ $(document).ready(function () {
 
             for (i = 0; i < iLength; i++) {
 
-                console.log(entries[i].ecplus_Place_ctrl3.latitude, ', ' + entries[i].ecplus_Place_ctrl3.longitude);
+                // console.log(entries[i].ecplus_Place_ctrl3.latitude, ', ' + entries[i].ecplus_Place_ctrl3.longitude);
 
                 if (entries[i].ecplus_Place_ctrl3.latitude !== "") {
 
@@ -308,41 +308,33 @@ $(document).ready(function () {
                         marker.bindPopup(_createMobileInfoContent(entries[i]), {closeButton: false});
                     }
 
-
-                    //marker.bindPopup(_createLeafletPopupContent(entries[i]));
-                    //marker.on('dragend', function (e) {
-                    //    marker.openPopup();
-                    //});
                     coords.push([entries[i].ecplus_Place_ctrl3.latitude, entries[i].ecplus_Place_ctrl3.longitude]);
                     cluster.addLayer(marker);
-
                 }
             }
 
-            //fit bounds to data set
-            map.fitBounds(coords, {padding: [50, 50]});
-            map.addLayer(cluster);
 
+            //on desktop, show the whole data set
             if (!is_device || !(device_lat && device_long)) {
-                // map.setCenter(bounds.getCenter());
-
-                //fit map to bounds
-                // map.fitBounds(bounds);
+                //fit bounds to whole data set
+                map.fitBounds(coords, {padding: [50, 50]});
             }
             else {
-                // map.setCenter(new google.maps.LatLng(device_lat, device_long));
-                // map.setZoom(10);
+                //on device, just show the data close to user location and amarker where the user acutally is (30m accuracy)
+
+                position = L.marker([device_lat, device_long]);
+                position.addTo(map);
+                map.fitBounds([[device_lat, device_long]], {padding: [100, 100]});
+                map.setZoom(12, {animate: true});
             }
 
+            map.addLayer(cluster);
 
             tiles.on("load", function () {
-
                 console.log("all visible tiles have been loaded");
                 fakeloader.fadeOut();
-
             });
         }
-
         addMarkers();
     }
 
@@ -362,8 +354,25 @@ $(document).ready(function () {
             //if the proxy is down for some reasons, show error message
             if (data.query.results) {
 
+
                 entries = data.query.results.json.json;
                 console.log(data.query.results.json.json);
+
+                //load test
+                var i;
+                var iLength = 250000;
+                var entry;
+
+
+                //for (i = 0; i < iLength; i++) {
+                //
+                //    entry = entries[Math.floor(Math.random() * 10) + 1];
+                //    entry.ecplus_Place_ctrl3.latitude = chance.latitude();
+                //    entry.ecplus_Place_ctrl3.longitude = chance.longitude();
+                //
+                //    entries.push(entry);
+                //}
+                //console.log('Test with total entries of ' + entries.length);
 
 
                 //get user location (on mobile only) to give just the entries around the area
@@ -373,7 +382,7 @@ $(document).ready(function () {
                     var onPosSuccess = function (position) {
 
                         device_lat = position.coords.latitude;
-                        device_long = position.coords.longitude
+                        device_long = position.coords.longitude;
 
                         initialize();
                     }
@@ -396,11 +405,8 @@ $(document).ready(function () {
             else {
 
                 $('#map-canvas').hide();
-                $('#proxy-error').show();
+                $('#proxy-error').removeClass('hidden');
                 fakeloader.fadeOut();
-
             }
-
-
         });
 });
