@@ -15,9 +15,11 @@ Working on a Google Maps and Open Layers implementations
 <img src="https://lh3.googleusercontent.com/o9Vis8sfL63rFhQCn1FFPLfz1FRDxXrZY-kJ63zlmPWtUVNouFTdq0uitTLMdycpm2qG=w300-rw" />
 </p>
 <p align="center">
-<a  href="https://play.google.com/store/apps/details?id=net.bestpint.app">
-  <img alt="Android app on Google Play" src="https://developer.android.com/images/brand/en_app_rgb_wo_60.png" />
+<a href="https://play.google.com/store/apps/details?id=net.bestpint.app">
+  <img alt="Android app on Google Play"
+       src="https://developer.android.com/images/brand/en_app_rgb_wo_45.png" />
 </a>
-<a href="https://itunes.apple.com/us/app/bestpint/id992504142?mt=8&uo=6&at=&ct=" target="itunes_store" style="display:inline-block;overflow:hidden;background:url(http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.png) no-repeat;width:165px;height:40px;@media only screen{background-image:url(http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.svg);}">
+<a href="https://itunes.apple.com/us/app/bestpint/id992504142?mt=8&uo=6&at=&ct=" target="itunes_store" >
+<img src="http://linkmaker.itunes.apple.com/images/badges/en-us/badge_appstore-lrg.png" alt="Bestpint on App Store"/>
 </a>
 </p>
