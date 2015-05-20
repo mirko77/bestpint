@@ -7,7 +7,7 @@ A proof of concept web app to get data from Epicollect+ Bestpint project and dis
 
 A bit slow to get data as it uses a proxy due to Epicollect+ security settings. 
 
-Data can be collected either using the Epicollect+ mobile app (Android only), or using the Bestpint mobile app for both Android and iOS
+Data can be collected either using the Epicollect+ mobile app (Android & iOS), or using the Bestpint mobile app for both Android and iOS
 
 Master branch uses Leaflet.js and OpenStreetMaps to render map and markers
 
