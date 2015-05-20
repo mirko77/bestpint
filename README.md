@@ -3,7 +3,7 @@ Bestpint.net
 
 A community focusing on finding the best pint around the world!
 
-A proof of concept web app to get data from Epicollect+ Bestpint project and display data on a map. 
+A proof of concept web app to get data from Epicollect+ Bestpint project and display data on a map. <a href="http://bestpint.net/">View it here</a>
 
 A bit slow to get data as it uses a proxy due to Epicollect+ security settings. 
 
@@ -12,9 +12,6 @@ Data can be collected either using the Epicollect+ mobile app (Android only), or
 Master branch uses Leaflet.js and OpenStreetMaps to render map and markers
 
 Working on a Google Maps and Open Layers implementations
-
-<a href="http://bestpint.net/">View it here</a>
-
 
 
 <p align="center">
