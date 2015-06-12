@@ -88,8 +88,6 @@
 <!-- /.container -->
 </nav>
 
-
-
 <div id="fakeloader"></div>
 <section id="map-canvas"></section>
 <section id="proxy-error" class="hidden"><h3>Sorry <br/> an error occurred when requesting data <br/> please try later!</h3></section>

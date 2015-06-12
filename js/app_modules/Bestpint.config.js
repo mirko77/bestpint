@@ -13,6 +13,8 @@ Bestpint.config = function () {
     this.device_lat = 0;
     this.device_long = 0;
 
+    this.max_zoom =18;
+
     //http://joaopereirawd.github.io/fakeLoader.js/
     this.fakeloader = $('#fakeloader');
     this.map_wrapper = $('#map-canvas');

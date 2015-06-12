@@ -1,5 +1,6 @@
 'use strict';
 var gulp = require('gulp');
+var del = require('del');
 var concat = require('gulp-concat');
 var order = require('gulp-order');
 var uglify = require('gulp-uglify');
@@ -46,6 +47,10 @@ gulp.task('app-styles', function () {
 
 // Default Task (re-run manually when adding a vendor)
 gulp.task('default', ['vendor-scripts', 'app-modules', 'app-styles'], function () {
+    //del(['./css/bestpint.css', './js/dist/bestpint.js']);
+});
+
+gulp.task('watch', function(){
     // watch for JS changes
     gulp.watch('./js/**/*.js', ['app-modules']);
     // watch for CSS changes

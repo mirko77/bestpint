@@ -400,7 +400,7 @@ body {
     margin-top: -50px;
 }
 
-.infoWindow, .leaflet-popup-content {
+.infoWindow, .leaflet-popup-content, .mobile-info-window {
     color: #333333 !important;
 }
 

@@ -4,6 +4,7 @@ var Bestpint = Bestpint || {};
 Bestpint.renderLeaflet = function () {
 
     var map;
+    var position;
     var tiles;
     var cluster;
     var is_device = Bestpint.isMobile.any();
@@ -11,6 +12,7 @@ Bestpint.renderLeaflet = function () {
     var map_options = {
         center: {lat: 0, lng: 0},
         zoom: 6,
+        maxZoom: Bestpint.max_zoom,
         zoomControl: is_device ? false : true
         //disableDefaultUI: is_device ? true : false
     };
@@ -38,14 +40,24 @@ Bestpint.renderLeaflet = function () {
         map.panTo(map.unproject(px), {animate: true}); // pan to new center
     });
 
+    //on mobile devices, remove current device position marker on maximum zoom so it is possible to tap on any overlapping markers
+    if (is_device) {
+        map.on('zoomend', function () {
+            if (Bestpint.max_zoom === map.getZoom()) {
+                map.removeLayer(position);
+            }
+            else {
+                position.addTo(map);
+            }
+        });
+    }
+
     function addMarkers() {
 
         var i;
         var iLength = Bestpint.entries.length;
         var marker;
-        var position;
         var coords = [];
-
 
         cluster = new L.MarkerClusterGroup({showCoverageOnHover: false, maxClusterRadius: 10});
 
@@ -54,7 +66,6 @@ Bestpint.renderLeaflet = function () {
             // console.log(entries[i].ecplus_Place_ctrl3.latitude, ', ' + entries[i].ecplus_Place_ctrl3.longitude);
 
             if (Bestpint.entries[i].ecplus_Place_ctrl3.latitude !== "") {
-
 
                 marker = L.marker([Bestpint.entries[i].ecplus_Place_ctrl3.latitude, Bestpint.entries[i].ecplus_Place_ctrl3.longitude], {icon: image});
                 // marker.addTo(map);
@@ -82,7 +93,6 @@ Bestpint.renderLeaflet = function () {
         }
         else {
             //on device, just show the data close to user location and amarker where the user acutally is (30m accuracy)
-
             position = L.marker([Bestpint.device_lat, Bestpint.device_long]);
             position.addTo(map);
             map.fitBounds([[Bestpint.device_lat, Bestpint.device_long]], {padding: [100, 100]});
@@ -98,6 +108,4 @@ Bestpint.renderLeaflet = function () {
     }
 
     addMarkers();
-
-
 };
