@@ -194,5 +194,6 @@
 <!-- JavaScript -->
 <script src="js/dist/vendor.js"></script>
 <script src="js/dist/bestpint.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

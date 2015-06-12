@@ -95,5 +95,6 @@
 <section id="proxy-error" class="hidden"><h3>Sorry <br/> an error occurred when requesting data <br/> please try later!</h3></section>
 <script src="js/dist/vendor.js"></script>
 <script src="js/dist/bestpint.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

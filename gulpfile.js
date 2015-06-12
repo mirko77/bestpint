@@ -30,10 +30,10 @@ gulp.task('vendor-scripts', function () {
 //concatenate app modules to dist folder
 gulp.task('app-modules', function () {
     return gulp.src(app_modules_path + '*.js')
-        .pipe(sourcemaps.init())
+      //  .pipe(sourcemaps.init())
         .pipe(concat('bestpint.js'))
-        .pipe(uglify())
-        .pipe(sourcemaps.write('./'))
+       // .pipe(uglify())
+      //  .pipe(sourcemaps.write('./'))
         .pipe(gulp.dest('./js/dist/'));
 });
 
