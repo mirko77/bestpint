@@ -11,32 +11,11 @@ Bestpint.renderGmaps = function () {
     var map_options = {
         center: {lat: 0, lng: 0},
         zoom: 6,
-        zoomControl: is_device ? false : true
-        //disableDefaultUI: is_device ? true : false
+        disableDefaultUI: is_device ? false : true
     };
 
-    var image = L.icon({
-        iconUrl: 'img/marker-icon.png',
-        iconSize: [32, 32],
-        iconAnchor: [16, 16]
-    });
-
-    //set default images path since we are using a custom location
-    L.Icon.Default.imagePath = './img/leaflet/';
-
     // initialize the map on the "map" div with a given center and zoom
-    map = L.map('map-canvas', map_options);
-    //  map.addControl(L.control.zoom({position: 'bottomleft'}));
-    tiles = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    ////center popup when it is open
-    map.on('popupopen', function (e) {
-        var px = map.project(e.popup._latlng); // find the pixel location on the map where the popup anchor is
-        px.y -= e.popup._container.clientHeight / 2;// find the height of the popup container, divide by 2, subtract from the Y axis of marker location
-        map.panTo(map.unproject(px), {animate: true}); // pan to new center
-    });
+    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
     function addMarkers() {
 
@@ -45,33 +24,39 @@ Bestpint.renderGmaps = function () {
         var marker;
         var position;
         var coords = [];
-
+        var bounds = new google.maps.LatLngBounds();
+        var latlong;
+        var infowindow = new google.maps.InfoWindow();
+        var markers = [];
 
         cluster = new L.MarkerClusterGroup({showCoverageOnHover: false, maxClusterRadius: 10});
 
         for (i = 0; i < iLength; i++) {
 
-            // console.log(entries[i].ecplus_Place_ctrl3.latitude, ', ' + entries[i].ecplus_Place_ctrl3.longitude);
-
             if (Bestpint.entries[i].ecplus_Place_ctrl3.latitude !== "") {
 
 
-                marker = L.marker([Bestpint.entries[i].ecplus_Place_ctrl3.latitude, Bestpint.entries[i].ecplus_Place_ctrl3.longitude], {icon: image});
-                // marker.addTo(map);
+                latlong = new google.maps.LatLng(entries[i].ecplus_Place_ctrl3.latitude, entries[i].ecplus_Place_ctrl3.longitude);
+                marker = new google.maps.Marker({
+                    position: latlong,
+                    map: map,
+                    title: entries[i].ecplus_Beer_ctrl13 + ', ' + entries[i].ecplus_Beer_ctrl6,
+                    icon: image
+                });
 
-                if (!is_device) {
-                    //on desktop, create full info window content (bootstrap table)
-                    marker.bindPopup(Bestpint.createInfoWindowContent(Bestpint.entries[i]));
-                }
-                else {
+                //add current marker to bounds
+                bounds.extend(latlong);
 
-                    //on device, show a mobile friendly info window with crucial data only (titles + picture (if any))
-                    marker.bindPopup(Bestpint.createMobileInfoContent(Bestpint.entries[i]), {closeButton: false});
-                }
-
-                coords.push([Bestpint.entries[i].ecplus_Place_ctrl3.latitude, Bestpint.entries[i].ecplus_Place_ctrl3.longitude]);
-                cluster.addLayer(marker);
+                //add infoWindow
+                google.maps.event.addListener(marker, 'click', (function (marker, i) {
+                    return function () {
+                        infowindow.setContent(_createInfoWindowContent(entries[i]));
+                        infowindow.open(map, marker);
+                    };
+                })(marker, i));
             }
+
+            markers.push(marker);
         }
 
 
