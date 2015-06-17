@@ -607,6 +607,17 @@ Bestpint.renderOpenLayers = function () {
             }))
         });
 
+        var positionStyle = new ol.style.Style({
+            image: new ol.style.Icon(/** @type {olx.style.IconOptions} */ ({
+                anchor: [0.5, 0.5],
+                anchorXUnits: 'fraction',
+                anchorYUnits: 'fraction',
+                opacity: 1,
+                // size: [32,32], does not work ? https://goo.gl/Trr27y
+                scale: 0.08,
+                src: 'img/map-marker-512x512.png'
+            }))
+        });
 
         function addMarkers() {
 
@@ -620,7 +631,7 @@ Bestpint.renderOpenLayers = function () {
             for (i = 0; i < iLength; i++) {
                 if (Bestpint.entries[i].ecplus_Place_ctrl3.latitude !== "") {
                     var iconFeature = new ol.Feature({
-                        //imp: he EPSG:4326 coordinate order lon, lat not lat, lon (http://goo.gl/EioTmw)
+                        //imp: the EPSG:4326 coordinate order lon, lat not lat, lon (http://goo.gl/EioTmw)
                         geometry: new
                             ol.geom.Point(ol.proj.transform([parseFloat(Bestpint.entries[i].ecplus_Place_ctrl3.longitude, 10), parseFloat(Bestpint.entries[i].ecplus_Place_ctrl3.latitude, 10)], 'EPSG:4326', 'EPSG:3857')),
                         name: Bestpint.entries[i].ecplus_Beer_ctrl13 + ', ' + Bestpint.entries[i].ecplus_Beer_ctrl6,
@@ -634,7 +645,6 @@ Bestpint.renderOpenLayers = function () {
             var vectorLayer = new ol.layer.Vector({
                 source: vectorSource,
                 distance: 40
-                //style: iconStyle
             });
 
             // a clustered source is configured with another vector source that it
@@ -643,15 +653,13 @@ Bestpint.renderOpenLayers = function () {
                 source: vectorSource
             });
 
-            // it needs a layer too
-            var styleCache = {};
             var clusterLayer = new ol.layer.Vector({
                 source: clusterSource,
                 style: function (feature, resolution) {
                     var size = feature.get('features').length;
                     var style;
-                    // var style = styleCache[size];
-                    // if (!style) {
+
+                    //on cluster, show circle witht he total size of the cluster
                     if (size > 1) {
                         style = [new ol.style.Style({
                             image: new ol.style.Circle({
@@ -672,13 +680,12 @@ Bestpint.renderOpenLayers = function () {
                         })];
                     }
                     else {
+                        //on single points just show the pint icon ;)
                         style = [iconStyle];
                     }
-
                     return style;
                 }
             });
-
 
             var element = document.getElementById('popup');
             var popup_content = $('#popup-content');
@@ -694,18 +701,57 @@ Bestpint.renderOpenLayers = function () {
                 autoPanAnimation: {duration: 500}
             });
 
-            var map = new ol.Map({
-                layers: [new ol.layer.Tile({
-                    //get tiles from Open Street Maps
-                    source: new ol.source.OSM({})
-                }), vectorLayer, clusterLayer],
-                overlays: [popup],
-                target: document.getElementById('map-canvas'),
-                view: new ol.View({
-                    center: [0, 0],
-                    zoom: 3
-                })
-            });
+            //on desktop, show the whole data set
+            if (!is_device || !(Bestpint.device_lat && Bestpint.device_long)) {
+                map = new ol.Map({
+                    layers: [new ol.layer.Tile({
+                        //get tiles from Open Street Maps
+                        source: new ol.source.OSM({})
+                    }), vectorLayer, clusterLayer],
+                    overlays: [popup],
+                    target: document.getElementById('map-canvas'),
+                    view: new ol.View({
+                        center: [0, 0],
+                        zoom: 3,
+                        maxZoom: Bestpint.max_zoom
+                    })
+                });
+            }
+            else {
+
+                var positionSource = new ol.source.Vector({
+                    //create empty vector
+                });
+                //on device, just show the data close to user location and a marker where the user actually is (30m accuracy)
+                //create icon at new map center
+                var positionFeature = new ol.Feature({
+                    geometry: new
+                        ol.geom.Point(ol.proj.transform([parseFloat(Bestpint.device_long, 10), parseFloat(Bestpint.device_lat, 10)], 'EPSG:4326', 'EPSG:3857')),
+                    name: 'You'
+                });
+
+                //add position to its vector source
+                positionSource.addFeature(positionFeature);
+
+                var positionLayer = new ol.layer.Vector({
+                    source: positionSource,
+                    style: positionStyle
+                });
+
+                map = new ol.Map({
+                    layers: [new ol.layer.Tile({
+                        //get tiles from Open Street Maps
+                        source: new ol.source.OSM({})
+                    }), vectorLayer, clusterLayer, positionLayer],
+                    overlays: [popup],
+                    target: document.getElementById('map-canvas'),
+                    view: new ol.View({
+                        center: ol.proj.transform([parseFloat(Bestpint.device_long, 10), parseFloat(Bestpint.device_lat, 10)], 'EPSG:4326', 'EPSG:3857'),
+                        zoom: 10,
+                        maxZoom: Bestpint.max_zoom
+                    })
+                });
+            }
 
             // display popup on click
             map.on('click', function (evt) {
@@ -718,7 +764,7 @@ Bestpint.renderOpenLayers = function () {
                         return feature;
                     });
 
-                //zoom in fior a cluster or trigger popup
+                //zoom in for a cluster or trigger popup
                 if (feature) {
                     var geometry;
                     var coord;
@@ -728,8 +774,8 @@ Bestpint.renderOpenLayers = function () {
                     //get all features for cluster
                     var features = feature.get('features');
 
+                    //if the user tapped a cluster, zoom in
                     if (features.length > 1) {
-                        //user tapped a cluster, zoom in
 
                         //get current elements
                         geometry = feature.getGeometry();
@@ -749,10 +795,17 @@ Bestpint.renderOpenLayers = function () {
                             center: coord,
                             zoom: current_zoom + 3
                         }));
+
+
                     }
                     else {
                         //user tapped a point, show popup
-                        html = Bestpint.createMobileInfoContent(Bestpint.entries[features[0].get('id')]);
+                        if(is_device) {
+                            html = Bestpint.createMobileInfoContent(Bestpint.entries[features[0].get('id')]);
+                        }
+                        else {
+                            html = Bestpint.createInfoWindowContent(Bestpint.entries[features[0].get('id')]);
+                        }
                         geometry = features[0].getGeometry();
                         coord = geometry.getCoordinates();
 
@@ -779,6 +832,23 @@ Bestpint.renderOpenLayers = function () {
                 } else {
                     map.getTarget().style.cursor = '';
                 }
+            });
+
+
+            $(map).on('moveend', function(){
+
+
+                if(is_device) {
+                    if (map.getView().getZoom() === Bestpint.max_zoom) {
+                        console.log('max zoom reached!!!');
+                        positionLayer.setVisible(false);
+                    }
+                    else {
+                        positionLayer.setVisible(true);
+                    }
+                }
+
+                console.log('zoomend called with zoom level ' + map.getView().getZoom());
             });
         }
         addMarkers();
