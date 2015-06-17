@@ -400,7 +400,7 @@ body {
     margin-top: -50px;
 }
 
-.infoWindow, .leaflet-popup-content, .mobile-info-window {
+.infoWindow, .leaflet-popup-content, .mobile-info-window, .popover-content {
     color: #333333 !important;
 }
 
@@ -477,3 +477,12 @@ td.img-wrapper i.fa.fa-spinner.fa-spin.fa-3x {
     left: -100%;
 }
 /*********************************************/
+/* Open Layers*/
+.ol-zoom.ol-unselectable.ol-control {
+    margin-top: 50px;
+}
+div#popup {
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+}

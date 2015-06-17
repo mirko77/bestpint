@@ -91,9 +91,10 @@ Bestpint.renderGmaps = function () {
 
 
                     })(marker, i));
+                    markers.push(marker);
                 }
 
-                markers.push(marker);
+
             }
 
             //on desktop, show the whole data set
