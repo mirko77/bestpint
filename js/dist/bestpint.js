@@ -572,13 +572,11 @@ var Bestpint = Bestpint || {};
 Bestpint.renderOpenLayers = function () {
 
     var map;
-    var position;
     var is_device = Bestpint.isMobile.any();
 
-    //load Google Maps script async
+    //load Open Layers 3 script async
     loadScript('http://openlayers.org/en/v3.6.0/build/ol.js', function () {
-        console.log('open layers has been loaded');
-
+        console.log('Open layers has been loaded');
         console.log('I should render the map with Open Layers ;)');
         doRender();
     });
@@ -614,7 +612,7 @@ Bestpint.renderOpenLayers = function () {
                 anchorYUnits: 'fraction',
                 opacity: 1,
                 // size: [32,32], does not work ? https://goo.gl/Trr27y
-                scale: 0.08,
+                scale: 0.08,//image is really big
                 src: 'img/map-marker-512x512.png'
             }))
         });
@@ -627,7 +625,7 @@ Bestpint.renderOpenLayers = function () {
                 //create empty vector
             });
 
-            //create a bunch of point and add to source vector
+            //generate points from data and add to source vector
             for (i = 0; i < iLength; i++) {
                 if (Bestpint.entries[i].ecplus_Place_ctrl3.latitude !== "") {
                     var iconFeature = new ol.Feature({
@@ -659,7 +657,7 @@ Bestpint.renderOpenLayers = function () {
                     var size = feature.get('features').length;
                     var style;
 
-                    //on cluster, show circle witht he total size of the cluster
+                    //on cluster, show circle with the total size of the cluster
                     if (size > 1) {
                         style = [new ol.style.Style({
                             image: new ol.style.Circle({
@@ -719,10 +717,11 @@ Bestpint.renderOpenLayers = function () {
             }
             else {
 
+                //on device, just show the data close to user location and a marker where the user actually is (30m accuracy)
                 var positionSource = new ol.source.Vector({
                     //create empty vector
                 });
-                //on device, just show the data close to user location and a marker where the user actually is (30m accuracy)
+
                 //create icon at new map center
                 var positionFeature = new ol.Feature({
                     geometry: new
@@ -738,6 +737,7 @@ Bestpint.renderOpenLayers = function () {
                     style: positionStyle
                 });
 
+                //set map
                 map = new ol.Map({
                     layers: [new ol.layer.Tile({
                         //get tiles from Open Street Maps
@@ -835,20 +835,18 @@ Bestpint.renderOpenLayers = function () {
             });
 
 
+            //moveend works as zoomend
             $(map).on('moveend', function(){
-
-
+                //on device hide current location at max zoom, to avoid overlapping with other markers causing problems when tapping for the info window
                 if(is_device) {
                     if (map.getView().getZoom() === Bestpint.max_zoom) {
-                        console.log('max zoom reached!!!');
                         positionLayer.setVisible(false);
                     }
                     else {
+                        //on higher zoom show device position marker
                         positionLayer.setVisible(true);
                     }
                 }
-
-                console.log('zoomend called with zoom level ' + map.getView().getZoom());
             });
         }
         addMarkers();
