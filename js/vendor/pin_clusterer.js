@@ -13,7 +13,7 @@
 		},
 
 		// Minimum zoom level before bounds dissappear
-		MIN_ZOOM = 2,
+		MIN_ZOOM = 3,
 		
 		// Alias for Microsoft.Maps
 		mm = null;

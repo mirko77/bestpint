@@ -499,3 +499,7 @@ div#popup {
 .Infobox {
     height: auto!important;
 }
+/* PinClusterer*/
+a.pin_clusterer.cluster.MapPushpinBase div{
+    margin-top: 5px;
+}
