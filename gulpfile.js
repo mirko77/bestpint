@@ -47,7 +47,7 @@ gulp.task('app-modules', function () {
 //concatenate css. Use same path as destination not to screw up img and fonts urls
 gulp.task('app-styles', function () {
 
-  //  del(['./css/bestpint.css']);
+    del(['./css/bestpint.css']);
 
     return gulp.src(app_styles_path + '*.css')
         .pipe(concat('bestpint.css'))

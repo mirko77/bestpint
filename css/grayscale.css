@@ -487,3 +487,15 @@ div#popup {
     border-radius: 10px;
     visibility: hidden;
 }
+/**********************************************/
+/* Bing Maps*/
+/* Prevent a tag inside of map to animate http://goo.gl/RDvKOw*/
+.MapPushpinBase {
+    -webkit-transition: none;
+    -moz-transition: none;
+    -o-transition: none;
+    transition: none;
+}
+.Infobox {
+    height: auto!important;
+}

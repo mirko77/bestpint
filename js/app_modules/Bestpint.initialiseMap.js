@@ -18,6 +18,9 @@ Bestpint.initialiseMap = function () {
         case 'ol':
             self.renderOpenLayers();
             break;
+        case 'bm':
+            self.renderBingMaps();
+            break;
         default:
             self.renderLeaflet();
     }
