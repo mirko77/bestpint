@@ -9,10 +9,13 @@ A bit slow to get data as it uses a proxy due to Epicollect+ security settings.
 
 Data can be collected either using the Epicollect+ mobile app (Android & iOS), or using the Bestpint mobile app for both Android and iOS
 
-Master branch uses Leaflet.js and OpenStreetMaps to render map and markers
+Master branch uses Leaflet.js to render map and markers as default http://bestpint.net/map
 
-Working on a Google Maps and Open Layers implementations
+Google Maps http://bestpint.net/?type=gm
 
+Open Layers http://bestpint.net/?type=ol
+
+Bing Maps http://bestpint.net/?type=bm
 
 <p align="center">
 <img src="https://lh3.googleusercontent.com/o9Vis8sfL63rFhQCn1FFPLfz1FRDxXrZY-kJ63zlmPWtUVNouFTdq0uitTLMdycpm2qG=w300-rw" />
