@@ -43,11 +43,15 @@ Bestpint.renderLeaflet = function () {
     //on mobile devices, remove current device position marker on maximum zoom so it is possible to tap on any overlapping markers
     if (is_device) {
         map.on('zoomend', function () {
-            if (Bestpint.max_zoom === map.getZoom()) {
-                map.removeLayer(position);
-            }
-            else {
-                position.addTo(map);
+
+            if (position) {
+
+                if (Bestpint.max_zoom === map.getZoom()) {
+                    map.removeLayer(position);
+                }
+                else {
+                    position.addTo(map);
+                }
             }
         });
     }

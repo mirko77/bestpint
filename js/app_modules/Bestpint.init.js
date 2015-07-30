@@ -14,6 +14,9 @@ Bestpint.init = function () {
                 Bestpint.initialiseMap();
             }, function (error) {
                 console.log(error);
+                //no position on mobile, maybe location services disabled, so set coords to 0,0
+                Bestpint.device_lat = 0;
+                Bestpint.device_long = 0;
                 Bestpint.initialiseMap();
             });
         }
